@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Biolingua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+
+  <script>
+    // Khởi tạo Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDya3jmajzxwUoBaClbHmZbEx0lUhNZcnw",
+      authDomain: "du-an-khkt-2025.firebaseapp.com",
+      projectId: "du-an-khkt-2025",
+      appId: "1:451195612336:web:4c3f10a008d5ffa11a5f75"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Hàm đăng nhập
+    function signInWithGoogle() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+    .then(result => {
+      document.getElementById('authMessage').innerText = "✅ Đăng nhập bằng Google thành công!";
+      document.getElementById('authContainer').style.display = 'none';
+      document.getElementById('flashcardContainer').style.display = 'block';
+    })
+    .catch(error => {
+      document.getElementById('authMessage').innerText = "❌ " + error.message;
+    });
+    function signIn() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          document.getElementById('authMessage').innerText = "✅ Đăng nhập thành công!";
+          document.getElementById('authContainer').style.display = 'none';
+          document.getElementById('flashcardContainer').style.display = 'block';
+        })
+        .catch(error => {
+          document.getElementById('authMessage').innerText = "❌ " + error.message;
+        });
+    }
+
+    // Hàm đăng ký
+    function signUp() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          document.getElementById('authMessage').innerText = "✅ Đăng ký thành công! Bạn có thể đăng nhập.";
+        })
+        .catch(error => {
+          document.getElementById('authMessage').innerText = "❌ " + error.message;
+        });
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      padding: 20px;
+      background-color: #f0f4f8;
+    }
+    #authContainer, #flashcardContainer {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 48%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 4%;
+    }
+    button:last-child {
+      margin-right: 0;
+      background-color: #2196F3;
+    }
+    #authMessage {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="authContainer">
+    <h2>Biolingua </h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Mật khẩu" />
+    <div style="display: flex; justify-content: space-between;">
+      <button onclick="signIn()">Đăng nhập</button>
+      <button onclick="signUp()">Đăng ký</button>
+      <button onclick="signInWithGoogle()" class="google-btn">Đăng nhập bằng Google</button>
+    </div>
+    <div id="authMessage"></div>
+  </div>
+
+  <div id="flashcardContainer" style="display:none;">
+    <h2>🎉 Chào mừng đến với Flashcard Sinh học!</h2>
+    <p>Bạn đã đăng nhập thành công. Hãy bắt đầu học nào!</p>
+  </div>
+
+</body>
+</html>
+
+  </script>
+  <style>
+    /* CSS giữ nguyên như bạn đã viết */
+    :root {
+      --bg-light: linear-gradient(to right, #e0f7fa, #fce4ec);
+      --bg-dark: #121212;
+      --text-light: #333;
+      --text-dark: #f0f0f0;
+      --card-light: #ffffff;
+      --card-dark: #1e1e1e;
+      --accent: #2196f3;
+      --transition-speed: 0.5s;
+    }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg-light);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background var(--transition-speed), color var(--transition-speed);
+    }
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    .container {
+      background: var(--card-light);
+      margin: 40px 0;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 800px;
+      width: 90%;
+      text-align: center;
+      transition: background var(--transition-speed);
+    }
+    body.dark .container {
+      background: var(--card-dark);
+    }
+    h1 {
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+    p {
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+    .toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+    }
+    .toggle input {
+      display: none;
+    }
+    .toggle label {
+      background: #ccc;
+      border-radius: 50px;
+      cursor: pointer;
+      width: 60px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      padding: 0 5px;
+      font-size: 14px;
+      color: #fff;
+    }
+    .toggle label::before {
+      content: '🌞';
+    }
+    .toggle label::after {
+      content: '🌙';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: left 0.3s;
+    }
+    .toggle input:checked + label::after {
+      left: 33px;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      padding: 12px;
+      width: 70%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: var(--accent);
+      color: white;
+      border-radius: 8px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1976d2;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .keywords {
+      margin-top: 25px;
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: left;
+    }
+    .keywords h3 {
+      margin-top: 0;
+    }
+    body.dark .keywords {
+      background: #263238;
+      color: #f0f0f0;
+    }
+    footer {
+      margin: 30px 0;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toggle">
+    <input type="checkbox" id="darkModeToggle" />
+    <label for="darkModeToggle"></label>
+  </div>
+
+  <!-- Nội dung flashcard -->
+  <div class="container" id="flashcardContainer" style="display: none;">
+    <h1>📚 NGHIÊN CỨU MỨC ĐỘ HỨNG THÚ CỦA HỌC SINH THPT KHI ỨNG DỤNG FLASHCARD SONG NGỮ (ANH - VIỆT)</h1>
+    <p>Nhập ID flashcard để xem (ví dụ: <strong>flashcard2</strong>)</p>
+    <input type="text" id="cardIdInput" placeholder="Nhập ID flashcard">
+    <button onclick="showCard()">Xem flashcard</button>
+    <div id="cardArea"></div>
+    <button onclick="signOut()">Đăng xuất</button>
+  </div>
+
+  <footer>© 2025 Dự Án KHKT | Minh Nhat & Bao Tram</footer>
+
+  <script>
+    // DARK MODE
+    const toggle = document.getElementById('darkModeToggle');
+    function loadTheme() {
+      const t = localStorage.getItem('theme') || 'light';
+      if (t === 'dark') {
+        document.body.classList.add('dark');
+        toggle.checked = true;
+      }
+    }
+    toggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+    loadTheme();
+
+    // FLASHCARD DATA
+    const data = {
+      flashcard1: {
+        image: "images/flashcard1.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Mô tả cho flashcard1"
+      },
+      flashcard2: {
+        image: "images/flashcard2.png",
+        keywords: ["keyword2", "tag2"],
+        description: "Isovolumic relaxation: Giãn đẳng tích"
+      }
+    };
+
+    function showCard() {
+      const input = document.getElementById('cardIdInput');
+      const id = input.value.trim().toLowerCase();
+      const card = data[id];
+      const container = document.getElementById('cardArea');
+
+      if (card) {
+        container.innerHTML = `
+          <img src="${card.image}" alt="Hình flashcard">
+          <div class="keywords">
+            <h3>Từ khóa:</h3>
+            <ul>${card.keywords.map(k => `<li>${k}</li>`).join('')}</ul>
+            <h3>Mô tả:</h3>
+            <p>${card.description}</p>
+          </div>
+        `;
+      } else
+    // DỮ LIỆU FLASHCARD
+    const data = {
+      flashcard1: {
+        image: "images/flashcard1.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard2: {
+        image: "images/flashcard2.png",
+        keywords: ["keyword2", "tag2"],
+        description: "Isovolumic relaxation: Giãn đẳng tích"
+      },
+      flashcard3: {
+        image: "images/flashcard3.png",
+        keywords: ["keyword3", "tag3"],
+        description: "Glossopharyngeal nerve: Dây thần kinh thiệt hầu"
+        
+      },
+      flashcard4: {
+        image: "images/flashcard4.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard5: {
+        image: "images/flashcard5.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+        flashcard6: {
+        image: "images/flashcard6.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+        flashcard7: {
+        image: "images/flashcard7.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+        flashcard8: {
+        image: "images/flashcard8.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+        flashcard9: {
+        image: "images/flashcard9.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+       },
+       flashcard10: {
+        image: "images/flashcard10.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+        flashcard11: {
+        image: "images/flashcard11.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+        },
+        flashcard12: {
+        image: "images/flashcard12.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard13: {
+        image: "images/flashcard13.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard14: {
+        image: "images/flashcard14.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard15: {
+        image: "images/flashcard15.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard16: {
+        image: "images/flashcard16.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard17: {
+        image: "images/flashcard17.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard18: {
+        image: "images/flashcard18.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard19: {
+        image: "images/flashcard19.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard20: {
+        image: "images/flashcard20.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard21: {
+        image: "images/flashcard21.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard22: {
+        image: "images/flashcard22.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard23: {
+        image: "images/flashcard23.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard24: {
+        image: "images/flashcard24.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard25: {
+        image: "images/flashcard25.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard26: {
+        image: "images/flashcard26.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard27: {
+        image: "images/flashcard27.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard28: {
+        image: "images/flashcard28.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard29: {
+        image: "images/flashcard29.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard30: {
+        image: "images/flashcard30.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard31: {
+        image: "images/flashcard31.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard32: {
+        image: "images/flashcard32.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard33: {
+        image: "images/flashcard33.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard34: {
+        image: "images/flashcard34.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard35: {
+        image: "images/flashcard35.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+       },
+        flashcard36: {
+        image: "images/flashcard36.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard37: {
+        image: "images/flashcard37.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard38: {
+        image: "images/flashcard38.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard39: {
+        image: "images/flashcard39.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard40: {
+        image: "images/flashcard40.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard41: {
+        image: "images/flashcard41.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard42: {
+        image: "images/flashcard42.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard43: {
+        image: "images/flashcard43.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard44: {
+        image: "images/flashcard44.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcardd45: {
+        image: "images/flashcard45.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard46: {
+        image: "images/flashcard46.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard47: {
+        image: "images/flashcard47.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard48: {
+        image: "images/flashcard48.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard49: {
+        image: "images/flashcard49.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard50: {
+        image: "images/flashcard50.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard51: {
+        image: "images/flashcard51.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard52: {
+        image: "images/flashcard52.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard53: {
+        image: "images/flashcard53.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard54: {
+        image: "images/flashcard54.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard55: {
+        image: "images/flashcard55.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard56: {
+        image: "images/flashcar56.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },flashcard57: {
+        image: "images/flashcard57.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard58: {
+        image: "images/flashcard58.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard59: {
+        image: "images/flashcard59.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+      flashcard60: {
+        image: "images/flashcard60.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+    },
+     flashcard61: {
+        image: "images/flashcard61.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+     },
+      flashcard62: {
+        image: "images/flashcard62.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+      },
+       flashcard63: {
+        image: "images/flashcard63.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+       },
+       flashcard64: {
+        image: "images/flashcard64.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+       },
+        flashcard65: {
+        image: "images/flashcard65.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+        },
+         flashcard66: {
+        image: "images/flashcard66.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+         },
+         flashcard67: {
+        image: "images/flashcard67.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+         },
+          flashcard68: {
+        image: "images/flashcard68.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+         flashcard69: {
+        image: "images/flashcard69.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+         },
+          flashcard70: {
+        image: "images/flashcard70.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+         flashcard71: {
+        image: "images/flashcard71.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+         },
+          flashcard72: {
+        image: "images/flashcard72.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+           flashcard73: {
+        image: "images/flashcard73.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+           },
+        flashcard74: {
+        image: "images/flashcard74.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard75: {
+        image: "images/flashcard75.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard76: {
+        image: "images/flashcard76.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard77: {
+        image: "images/flashcard77.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard78: {
+        image: "images/flashcard78.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard79: {
+        image: "images/flashcard79.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard80: {
+        image: "images/flashcard80.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard81: {
+        image: "images/flashcard81.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard82: {
+        image: "images/flashcard82.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard83: {
+        image: "images/flashcard83.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard84: {
+        image: "images/flashcard84.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard85: {
+        image: "images/flashcard85.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard86: {
+        image: "images/flashcard86.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard87: {
+        image: "images/flashcard87.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard88: {
+        image: "images/flashcard88.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard89: {
+        image: "images/flashcard89.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard90: {
+        image: "images/flashcard90.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard91: {
+        image: "images/flashcard91.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard92: {
+        image: "images/flashcard92.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard93: {
+        image: "images/flashcard93.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard94: {
+        image: "images/flashcard94.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard95: {
+        image: "images/flashcard95.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard96: {
+        image: "images/flashcard96.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard97: {
+        image: "images/flashcard97.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard98: {
+        image: "images/flashcard98.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard99: {
+        image: "images/flashcard99.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard100: {
+        image: "images/flashcard100.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard101: {
+        image: "images/flashcard101.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard102: {
+        image: "images/flashcard102.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard103: {
+        image: "images/flashcard103.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard104: {
+        image: "images/flashcard104.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard105: {
+        image: "images/flashcard105.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard106: {
+        image: "images/flashcard106.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard107: {
+        image: "images/flashcard107.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard108: {
+        image: "images/flashcard108.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard109: {
+        image: "images/flashcard109.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard110: {
+        image: "images/flashcard110.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard111: {
+        image: "images/flashcard111.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard112: {
+        image: "images/flashcard112.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard113: {
+        image: "images/flashcard113.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard114: {
+        image: "images/flashcard114.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard115: {
+        image: "images/flashcard115.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard116: {
+        image: "images/flashcard116.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard117: {
+        image: "images/flashcard117.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard118: {
+        image: "images/flashcard118.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard119: {
+        image: "images/flashcard119.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard120: {
+        image: "images/flashcard120.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard121: {
+        image: "images/flashcard121.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard122: {
+        image: "images/flashcard122.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard123: {
+        image: "images/flashcard123.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard124: {
+        image: "images/flashcard124.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard125: {
+        image: "images/flashcard125.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard126: {
+        image: "images/flashcard126.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard127: {
+        image: "images/flashcard127.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard128: {
+        image: "images/flashcard128.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard129: {
+        image: "images/flashcard129.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard130: {
+        image: "images/flashcard130.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard131: {
+        image: "images/flashcard131.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard132: {
+        image: "images/flashcard132.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard133: {
+        image: "images/flashcard133.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard134: {
+        image: "images/flashcard134.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard135: {
+        image: "images/flashcard135.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard136: {
+        image: "images/flashcard136.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard137: {
+        image: "images/flashcard137.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard138: {
+        image: "images/flashcard138.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard139: {
+        image: "images/flashcard139.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard140: {
+        image: "images/flashcard140.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard141: {
+        image: "images/flashcard141.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard142: {
+        image: "images/flashcard142.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard143: {
+        image: "images/flashcard143.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard144: {
+        image: "images/flashcard144.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard145: {
+        image: "images/flashcard145.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard146: {
+        image: "images/flashcard146.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard147: {
+        image: "images/flashcard147.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard148: {
+        image: "images/flashcard148.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard149: {
+        image: "images/flashcard149.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard150: {
+        image: "images/flashcard150.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard151: {
+        image: "images/flashcard151.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard152: {
+        image: "images/flashcard152.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard153: {
+        image: "images/flashcard153.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard154: {
+        image: "images/flashcard154.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard155: {
+        image: "images/flashcard155.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard156: {
+        image: "images/flashcard156.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard157: {
+        image: "images/flashcard157.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard158: {
+        image: "images/flashcard158.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard159: {
+        image: "images/flashcard159.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard160: {
+        image: "images/flashcard160.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard161: {
+        image: "images/flashcard161.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard162: {
+        image: "images/flashcard162.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard163: {
+        image: "images/flashcard163.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard164: {
+        image: "images/flashcard164.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard165: {
+        image: "images/flashcard165.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard166: {
+        image: "images/flashcard166.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard167: {
+        image: "images/flashcard167.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard168: {
+        image: "images/flashcard168.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard169: {
+        image: "images/flashcard169.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard170: {
+        image: "images/flashcard170.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard171: {
+        image: "images/flashcard171.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard172: {
+        image: "images/flashcard172.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard173: {
+        image: "images/flashcard173.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard174: {
+        image: "images/flashcard174.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard175: {
+        image: "images/flashcard175.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard176: {
+        image: "images/flashcard176.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard177: {
+        image: "images/flashcard177.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard178: {
+        image: "images/flashcard178.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard179: {
+        image: "images/flashcard179.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard170: {
+        image: "images/flashcard170.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard171: {
+        image: "images/flashcard172.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard173: {
+        image: "images/flashcard173.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard174: {
+        image: "images/flashcard174.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard175: {
+        image: "images/flashcard175.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard176: {
+        image: "images/flashcard176.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard177: {
+        image: "images/flashcard177.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard178: {
+        image: "images/flashcard178.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard179: {
+        image: "images/flashcard179.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard180: {
+        image: "images/flashcard180.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard181: {
+        image: "images/flashcard181.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard182: {
+        image: "images/flashcard182.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard183: {
+        image: "images/flashcard183.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard184: {
+        image: "images/flashcard184.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard185: {
+        image: "images/flashcard185.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard186: {
+        image: "images/flashcard186.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard187: {
+        image: "images/flashcard187.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard188: {
+        image: "images/flashcard188.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard189: {
+        image: "images/flashcard189.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard190: {
+        image: "images/flashcard190.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard191: {
+        image: "images/flashcard191.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard192: {
+        image: "images/flashcard192.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard193: {
+        image: "images/flashcard193.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard194: {
+        image: "images/flashcard194.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard195: {
+        image: "images/flashcard195.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard196: {
+        image: "images/flashcard196.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard197: {
+        image: "images/flashcard197.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard198: {
+        image: "images/flashcard198.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard199: {
+        image: "images/flashcard199.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard200: {
+        image: "images/flashcard200.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard201: {
+        image: "images/flashcard201.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard202: {
+        image: "images/flashcard202.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard203: {
+        image: "images/flashcard203.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard204: {
+        image: "images/flashcard204.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+          flashcard205: {
+        image: "images/flashcard205.png",
+        keywords: ["keyword1", "tag1"],
+        description: "Nội dung mô tả cho flashcard1"
+          },
+           }
+
+  // HÀM HIỂN THỊ FLASHCARD
+    function showCard() {
+      const input = document.getElementById('cardIdInput');
+      const id = input.value.trim().toLowerCase();
+      const card = data[id];
+      const container = document.getElementById('cardArea');
+
+      if (card) {
+        container.innerHTML = `
+          <img src="${card.image}" alt="Hình flashcard">
+          <div class="keywords">
+            <h3>Từ khóa:</h3>
+            <ul>
+              ${card.keywords.map(k => `<li>${k}</li>`).join('')}
+            </ul>
+            <h3>Mô tả:</h3>
+            <p>${card.description}</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `<p style="color: red;">Không tìm thấy flashcard với ID <strong>${id}</strong></p>`;
+      }
+    }
+    
+    // Tự động hiển thị nếu có ?id=... trong URL
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const idFromUrl = urlParams.get('id');
+      if (idFromUrl) {
+        document.getElementById('cardIdInput').value = idFromUrl;
+        showCard();
+      }
+    });
+  </script>
+
+</body>
+</html>
